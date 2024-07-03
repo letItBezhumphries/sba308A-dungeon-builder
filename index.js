@@ -1,8 +1,10 @@
 import axios from 'axios';
 import {
-  renderMonsterSpeed,
-  renderMonsterDetails,
+  renderMonsterStats,
+  renderMonsterArmorStats,
+  renderMonsterAttributes,
   renderMonsterProficiencies,
+  renderMonsterSpecials,
   renderMonsterActions,
   renderMonsterLegendaryActions,
 } from './monster';
@@ -89,86 +91,39 @@ const renderMonstersList = function () {
 renderMonstersList();
 
 const renderMonsterView = function (monsterObj) {
-  const {
-    index,
-    name,
-    size,
-    type,
-    alignment,
-    actions,
-    armor_class,
-    challenge_rating,
-    charisma,
-    condition_immunities,
-    constitution,
-    damage_immunities,
-    damage_resistance,
-    damage_vulnerabilities,
-    dexterity,
-    hit_dice,
-    hit_points,
-    hit_points_roll,
-    intelligence,
-    languages,
-    legendary_actions,
-    proficiencies,
-    proficiency_bonus,
-    senses,
-    special_abilities,
-    speed,
-    strength,
-    wisdom,
-    xp,
-  } = monsterObj;
-  const url = REQURL + `/images/monsters/${index}.png`;
+  const imageUrl = REQURL + `/images/monsters/${monsterObj.index}.png`;
   console.log('in renderMonsterView:', monsterObj);
 
   currentMonsterView.innerHTML = '';
 
   /* Add the monster image to the monster view */
-  const monsterImage = document.createElement('img');
-  monsterImage.className = 'monster-image';
-  monsterImage.setAttribute('src', url);
-  currentMonsterView.appendChild(monsterImage);
+  if (monsterObj.image) {
+    const monsterImage = document.createElement('img');
+    monsterImage.className = 'monster-image';
+    monsterImage.setAttribute('src', imageUrl);
+    currentMonsterView.appendChild(monsterImage);
+  }
 
-  const monsterInfo = document.createElement('div');
-  monsterInfo.className = 'monster-info';
-  monsterInfo.innerHTML = `<h3 class="name">${name}</h3>
-  <p class="type">${size} ${type}, ${alignment}</p>
-  `;
-  currentMonsterView.appendChild(monsterInfo);
+  /* Add the monster stats table to the monster view */
+  renderMonsterStats(monsterObj, currentMonsterView);
 
-  const monsterArmor = document.createElement('table');
-  monsterArmor.className = 'monster-armor';
-  monsterArmor.innerHTML = `<tr class="trow">
-    <td>Armor Class:</td>
-    <td>${armor_class[0].value} (${armor_class[0].type} armor)</td>
-  </tr>
-  <tr class="trow">
-    <td>Hit Points:</td>
-    <td>${hit_points} (${hit_points_roll})</td>
-  </tr>
-  <tr class="trow">
-    <td>Speed:</td>
-    <td>${renderMonsterSpeed(monsterObj)}</td>
-  </tr>
-  `;
-  currentMonsterView.appendChild(monsterArmor);
-  currentMonsterView.appendChild(document.createElement('br'));
+  /** Add the monster armor stats to the monster view */
+  renderMonsterArmorStats(monsterObj, currentMonsterView);
 
-  const monsterAttributes = document.createElement('table');
-  monsterAttributes.className = 'monster-attributes';
-  monsterAttributes.innerHTML = `<tr>
-    <td>Strength</td><td>Dexterity</td><td>Constitution</td><td>Intelligence</td><td>Wisdom</td><td>Charisma</td>
-  </tr><tr><td>${strength}</td><td>${dexterity}</td><td>${constitution}</td><td>${intelligence}</td><td>${wisdom}</td><td>${charisma}</td></tr>
-  `;
-  currentMonsterView.appendChild(monsterAttributes);
+  /* Add the monster attributes table to the monster view */
+  renderMonsterAttributes(monsterObj, currentMonsterView);
 
-  /* Add the monster details to the monster view */
-  // const monsterDetails = document.createElement('table');
-  // monsterDetails.className = 'monster-details';
-  // currentMonsterView.appendChild(monsterDetails);
-  renderMonsterDetails(monsterObj, currentMonsterView);
+  /* Add the monster proficiencies table to the monster view */
+  renderMonsterProficiencies(monsterObj, currentMonsterView);
+
+  /* Add the monster special abilities section to the monster view */
+  renderMonsterSpecials(monsterObj, currentMonsterView);
+
+  /* Add the monster actions sections to the monster view */
+  renderMonsterActions(monsterObj, currentMonsterView);
+
+  /* Add the monster legendary actions section to the monster view */
+  renderMonsterLegendaryActions(monsterObj, currentMonsterView);
 };
 
 const getMonster = function (index) {

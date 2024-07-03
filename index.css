@@ -21,11 +21,34 @@ body {
   background-color: yellow;
 }
 
-.monster-details {
+.monster-proficiencies {
   width: 100%;
   background-color: aquamarine;
 }
 
+.monster-specials {
+  width: 100%;
+  background-color: aliceblue;
+}
+
+/* .special-ability {
+} */
+
+.special-ability span {
+  font-weight: 900;
+}
+
 .monster-actions {
-  width: 80%;
+  width: 100%;
+  background-color: bisque;
+}
+
+.section-header {
+}
+
+.monster-action {
+}
+
+.monster-action span {
+  font-weight: 800;
 }
