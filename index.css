@@ -1,0 +1,31 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  min-height: 100vh;
+}
+
+.monster-image {
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 200px;
+  height: 200px;
+}
+
+.monster-info {
+  width: 100%;
+  background-color: yellow;
+}
+
+.monster-details {
+  width: 100%;
+  background-color: aquamarine;
+}
+
+.monster-actions {
+  width: 80%;
+}
