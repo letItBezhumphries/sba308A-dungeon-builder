@@ -1,3 +1,118 @@
+import axios from 'axios';
+const APIURL = 'https://www.dnd5eapi.co/api';
+const API2URL = 'https://api.open5e.com/monsters/?limit=100';
+
+axios.defaults.headers.common = {
+  Accept: 'application/json',
+};
+
+const getMonster = async function (index) {
+  try {
+    const monster = (await axios.get(APIURL + '/monsters/' + index)).data;
+    console.log('in getMonster async:', monster);
+    const monsterView = document.querySelector('.monster-view');
+    renderMonsterView(monster, monsterView);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getMonsters = async () => {
+  try {
+    const res = await axios.get(APIURL);
+
+    console.log('res data for 2nd api monsters:', res.data);
+  } catch (error) {
+    console.log('error occurred', error);
+  }
+};
+
+const renderMonstersList = function (elem) {
+  let url = APIURL + '/monsters';
+  axios
+    .get(url)
+    .then((res) => {
+      // console.log('res:', res);
+      res.data.results.map((monster) => {
+        let monsterRow = document.createElement('tr');
+        let monsterBtn = document.createElement('button');
+        monsterBtn.className = 'monster-btn';
+        monsterBtn.textContent = `${monster.name}`;
+        monsterBtn.setAttribute('data-index', `${monster.index}`);
+
+        monsterBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          console.log('e.target:', e.target.getAttribute('data-index'));
+          getMonster(e.target.getAttribute('data-index'));
+        });
+
+        monsterRow.appendChild(monsterBtn);
+        elem.appendChild(monsterRow);
+      });
+    })
+    .catch((err) => {
+      console.log('error occured:', err);
+    });
+};
+
+const renderMonsterListPage = function (elem) {
+  elem.innerHTML = ``;
+
+  const monstersListContainer = document.createElement('div');
+  monstersListContainer.className = 'monster-list-container';
+  const monstersListHeader = document.createElement('h2');
+  monstersListHeader.className = 'monster-list-header';
+  monstersListHeader.textContent = 'Monsters';
+  monstersListHeader.style.textAlign = 'center';
+  monstersListContainer.appendChild(monstersListHeader);
+  const monstersList = document.createElement('table');
+  monstersList.className = 'monsters-list';
+  monstersListContainer.appendChild(monstersList);
+  const currentMonsterView = document.createElement('div');
+  currentMonsterView.className = 'monster-view';
+
+  elem.appendChild(monstersListContainer);
+  elem.appendChild(currentMonsterView);
+
+  renderMonstersList(monstersList);
+};
+
+const renderMonsterView = function (monsterObj, elem) {
+  const imageUrl = APIURL + `/images/monsters/${monsterObj.index}.png`;
+  console.log('in renderMonsterView:', monsterObj);
+
+  elem.innerHTML = '';
+
+  /* Add the monster image to the monster view */
+  if (monsterObj.image) {
+    const monsterImage = document.createElement('img');
+    monsterImage.className = 'monster-image';
+    monsterImage.setAttribute('src', imageUrl);
+    elem.appendChild(monsterImage);
+  }
+
+  /* Add the monster stats table to the monster view */
+  renderMonsterStats(monsterObj, elem);
+
+  /** Add the monster armor stats to the monster view */
+  renderMonsterArmorStats(monsterObj, elem);
+
+  /* Add the monster attributes table to the monster view */
+  renderMonsterAttributes(monsterObj, elem);
+
+  /* Add the monster proficiencies table to the monster view */
+  renderMonsterProficiencies(monsterObj, elem);
+
+  /* Add the monster special abilities section to the monster view */
+  renderMonsterSpecials(monsterObj, elem);
+
+  /* Add the monster actions sections to the monster view */
+  renderMonsterActions(monsterObj, elem);
+
+  /* Add the monster legendary actions section to the monster view */
+  renderMonsterLegendaryActions(monsterObj, elem);
+};
+
 const renderMonsterSpeed = function (monsterObj) {
   let output = '';
   if (monsterObj) {
@@ -92,6 +207,8 @@ const renderMonsterProficiencies = function (monsterObj, elem) {
     }
   }
 
+  const proficienciesSection = document.createElement('section');
+  proficienciesSection.className = 'proficiencies-section';
   const proficienciesTable = document.createElement('table');
   proficienciesTable.className = 'monster-proficiencies';
   proficienciesTable.innerHTML = `<tr class="trow">
@@ -108,7 +225,8 @@ const renderMonsterProficiencies = function (monsterObj, elem) {
     <td>Challenge:</td><td>${monsterObj.challenge_rating} (${monsterObj.xp} XP)</td>
   </tr>
   `;
-  elem.appendChild(proficienciesTable);
+  proficienciesSection.appendChild(proficienciesTable);
+  elem.appendChild(proficienciesSection);
 };
 
 const renderMonsterSpecials = function (monsterObj, elem) {
@@ -119,7 +237,7 @@ const renderMonsterSpecials = function (monsterObj, elem) {
     monsterObj.special_abilities.forEach((special) => {
       let spcl = document.createElement('p');
       spcl.className = 'special-ability';
-      spcl.innerHTML = `<span class="name">${special.name}</span> ${special.desc}`;
+      spcl.innerHTML = `<span class="ability-name">${special.name} - </span> ${special.desc}`;
       monsterSpecialAbilities.appendChild(spcl);
     });
 
@@ -141,7 +259,7 @@ const renderMonsterActions = function (monsterObj, elem) {
       let actn = document.createElement('p');
       actn.className = 'monster-action';
       // check if the action object has an actions array as a property?
-      actn.innerHTML = `<span class="action-name">${action.name}</span>  ${action.desc}`;
+      actn.innerHTML = `<span class="action-name">${action.name} -</span>  ${action.desc}`;
       monsterActionsSection.appendChild(actn);
     });
     elem.appendChild(monsterActionsSection);
@@ -163,7 +281,7 @@ const renderMonsterLegendaryActions = function (monsterObj, elem) {
       let action = document.createElement('p');
       action.className = 'monster-action';
       // check if the legend has damage and attack bonus property
-      action.innerHTML = `<span class="action-name">${legend.name}</span>  ${legend.desc}`;
+      action.innerHTML = `<span class="action-name">${legend.name} - </span>  ${legend.desc}`;
       monsterLegndActions.appendChild(action);
     });
     elem.appendChild(monsterLegndActions);
@@ -171,12 +289,15 @@ const renderMonsterLegendaryActions = function (monsterObj, elem) {
 };
 
 export {
-  renderMonsterSpeed,
-  renderMonsterStats,
-  renderMonsterArmorStats,
-  renderMonsterAttributes,
-  renderMonsterProficiencies,
-  renderMonsterSpecials,
-  renderMonsterActions,
-  renderMonsterLegendaryActions,
+  renderMonsterListPage,
+  // renderMonstersList,
+  // renderMonsterView,
+  // renderMonsterSpeed,
+  // renderMonsterStats,
+  // renderMonsterArmorStats,
+  // renderMonsterAttributes,
+  // renderMonsterProficiencies,
+  // renderMonsterSpecials,
+  // renderMonsterActions,
+  // renderMonsterLegendaryActions,
 };
