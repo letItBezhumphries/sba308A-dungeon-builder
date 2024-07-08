@@ -1,4 +1,4 @@
-import { renderMonsterListPage } from './monster';
+import { renderMonsterPage } from './monster';
 import { renderCharactersBuildPage } from './character';
 
 /* App element */
@@ -25,11 +25,12 @@ navElem.appendChild(navLinks);
 const characterLink = document.querySelector('.characters-link a');
 characterLink.addEventListener('click', (e) => {
   e.preventDefault();
+  appElem.innerHTML = '';
   renderCharactersBuildPage(appElem);
 });
 
 const monstersLink = document.querySelector('.monsters-link a');
 monstersLink.addEventListener('click', (e) => {
   e.preventDefault();
-  renderMonsterListPage(appElem);
+  renderMonsterPage(appElem);
 });

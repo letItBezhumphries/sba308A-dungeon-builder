@@ -109,6 +109,14 @@ nav ul {
   color: lightgray;
 }
 
+.page-controls-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.page-controls-row button {
+}
+
 .monster-view {
   margin-top: 20px;
 
@@ -133,7 +141,6 @@ nav ul {
 
 .monster-info {
   width: 100%;
-  /* background-color: yellow; */
   color: var(--jet);
   font-size: 12px;
   font-style: italic;
@@ -169,6 +176,20 @@ nav ul {
 }
 
 .trow td:last-of-type {
+}
+
+.page-controls-row button {
+  border: none;
+  color: dodgerblue;
+  font-size: 13px;
+  background-color: white;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+  color: rgb(76, 160, 244);
+  background-color: white;
+  cursor: pointer;
 }
 
 .monster-attributes {
@@ -237,7 +258,14 @@ nav ul {
   font-weight: 300;
   color: var(--jet);
   border-bottom: 1px solid var(--jet);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.legendary-description {
+  font-size: 13px;
+  padding: 0px 5px 10px 5px;
+  font-weight: 300;
+  color: var(--jet);
 }
 
 .monster-action {
