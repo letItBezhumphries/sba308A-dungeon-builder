@@ -1,6 +1,6 @@
-# Dungeon Builder App that makes use of two Dungeons & Dragons API's
+# Dungeon Builder App
 
-## Built JavaScript, Axios, CSS and HTML and a couple
+## Built JavaScript, Axios, CSS and HTML
 
 ![Image of where I left off in working on dugeon builder app.](/screenshot.png)
 
